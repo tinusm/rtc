@@ -98,11 +98,11 @@ public class TestClass {
 			//	System.out.println("\t" + cookie.getName() + " : " + cookie.getValue());
 			//}
 
-			input = new BufferedReader(new FileReader("C:/id.txt"));
+			input = new BufferedReader(new FileReader("C:/Keerthana/Mobily/RTC/QAToolReader/ids.txt"));
 			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh-mm-ss-SS a");
 			output = new PrintWriter(sdf.format(new Date()) + ".csv");
 			output.write(
-					"Id,Category,Creator,Creation Date,Resolution Date,Internal State,Sr Number,Modified Date,Phase, Phase Status, Modified By,Defect Type,Status,Filed Against,Owned By\n");
+					"Id,Category,Creator,Creation Date,Resolution Date,Internal State,Sr Number,Modified Date,Modified By,Defect Type,Status,Filed Against,Owned By,Retesting Date,Ready For Retest,Defect Resolution Date\n");//Changes
 				//	"Id, Phase, Phase Status, SubPhase \n");
 			HttpEntity httpEntity = null;
 			String responseString = null;
@@ -147,8 +147,9 @@ public class TestClass {
 					//String Phase Status = "";
 					String SubPhase = "";
 					String TextExecCycles = "";
-
-					
+					String retestDate = "";//Changes
+					String readyForRetest="";//Changes
+					String defectResolutionDate="";//Changes
 					int i = 0;
 					for (; i < doc.getElementsByTagName("attributes").getLength(); ++i) {
 						
@@ -156,19 +157,42 @@ public class TestClass {
 						nl = rootNode.getChildNodes();
 						key = getValueFromNode(rootNode.getChildNodes(), "key", "key");
 						if ((key != null) && (key.trim().equalsIgnoreCase("category"))) {
-							System.out.println("11111111");
+							//System.out.println("11111111");
 							category = getValueFromNode(rootNode.getChildNodes(), "value/path", "path");
 						} else if ((key != null) && (key.trim().equalsIgnoreCase("creator"))) {
-							System.out.println("2222222222");
+							//System.out.println("2222222222");
 							creator = getValueFromNode(rootNode.getChildNodes(), "value/userId", "userId");
 						} else if ((key != null) && (key.trim().equalsIgnoreCase("creationDate"))) {
-							System.out.println("3333333333");
+							//System.out.println("3333333333");
 							creationDate = getValueFromNode(rootNode.getChildNodes(), "value/id", "id");
 						} else if ((key != null) && (key.trim().equalsIgnoreCase("resolutionDate"))) {
-							System.out.println("4444444444444");
+							//System.out.println("4444444444444");
 							resolutionDate = getValueFromNode(rootNode.getChildNodes(), "value/id", "id");
-						} else {
-							System.out.println("5555555555555");
+						} 
+						//Changes
+						else if ((key != null) && (key.trim().equalsIgnoreCase("retesting_date"))) {
+							//System.out.println("66666666666");
+							retestDate = getValueFromNode(rootNode.getChildNodes(), "value/id", "id");
+							System.out.println("Retesting date:"+retestDate);
+						} 
+						else if ((key != null) && (key.trim().equalsIgnoreCase("ready_for_retest_date"))) 
+						{
+							//System.out.println("7777777");
+						readyForRetest = getValueFromNode(rootNode.getChildNodes(), "value/id", "id");
+						System.out.println("Ready For retest:"+readyForRetest);
+					}
+						else if ((key != null) && (key.trim().equalsIgnoreCase("Defect_Resolution_Date"))) 
+						{
+							//System.out.println("9999999999");
+							defectResolutionDate = getValueFromNode(rootNode.getChildNodes(), "value/id", "id");
+							System.out.println("Defect reso date:"+defectResolutionDate);
+					}
+						
+						
+						//Change end
+
+						else {
+							//System.out.println("5555555555555");
 							if ((key == null) || (!(key.trim().equalsIgnoreCase("internalState"))))
 								continue;
 							internalState = getValueFromNode(rootNode.getChildNodes(), "value/label", "label");
@@ -177,10 +201,11 @@ public class TestClass {
 					}
 
 				//	int i = 0;
-					for (; i < doc.getElementsByTagName("changes").getLength(); ++i) {
-						
+					int j = 0; //changes
+					for (; j < doc.getElementsByTagName("changes").getLength(); ++j) {//changes
+						System.out.println("In for");
 						//System.out.println("11111111111");
-						rootNode = doc.getElementsByTagName("changes").item(i);
+						rootNode = doc.getElementsByTagName("changes").item(j);//changes
 						nl = rootNode.getChildNodes();
 
 						Modified_By = getValueFromNode(rootNode.getChildNodes(), "modifiedBy/userId", "userId");
@@ -250,7 +275,7 @@ public class TestClass {
 							}
 							System.out.println(id + "," + category + "," + creator + "," + creationDate + "," + resolutionDate
 									+ "," + internalState + "," + srNumber + "," + Modified_Date + "," + Modified_By + ","
-									+ Defect_Type + "," + Status + "," + Filed_Against + "," + Owned_By + "\n");
+									+ Defect_Type + "," + Status + "," + Filed_Against + "," + Owned_By + ","+retestDate+","+readyForRetest+","+defectResolutionDate+"\n");
 						}
 
 						if ((Modified_Date == null) && (Modified_By == null) && (Defect_Type == null)
@@ -258,7 +283,7 @@ public class TestClass {
 							continue;
 						output.write(id + "," + category + "," + creator + "," + creationDate + "," + resolutionDate
 								+ "," + internalState + "," + srNumber + "," + Modified_Date + "," + Modified_By + ","
-								+ Defect_Type + "," + Status + "," + Filed_Against + "," + Owned_By + "\n");
+								+ Defect_Type + "," + Status + "," + Filed_Against + "," + Owned_By + ","+retestDate+","+readyForRetest+","+defectResolutionDate+"\n");
 						
 						
 
